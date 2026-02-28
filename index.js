@@ -10,18 +10,36 @@ let productos = [
   { id: 2, nombre: "Mouse" }
 ];
 
-// REST
+// GET - obtener todos
 app.get("/api/productos", (req, res) => {
-  res.json(productos);
+   res.json(productos);
 });
 
+// POST - agregar producto
 app.post("/api/productos", (req, res) => {
-  const nuevo = {
-    id: productos.length + 1,
-    nombre: req.body.nombre
-  };
-  productos.push(nuevo);
-  res.status(201).json(nuevo);
+   const nuevoProducto = req.body;
+   productos.push(nuevoProducto);
+   res.json({ mensaje: "Producto agregado" });
+});
+
+// PUT - actualizar producto
+app.put("/api/productos/:id", (req, res) => {
+   const id = parseInt(req.params.id);
+   const producto = productos.find(p => p.id === id);
+
+   if (producto) {
+      producto.nombre = req.body.nombre;
+      res.json({ mensaje: "Producto actualizado" });
+   } else {
+      res.status(404).json({ error: "Producto no encontrado" });
+   }
+});
+
+// DELETE - eliminar producto
+app.delete("/api/productos/:id", (req, res) => {
+   const id = parseInt(req.params.id);
+   productos = productos.filter(p => p.id !== id);
+   res.json({ mensaje: "Producto eliminado" });
 });
 
 // SOAP
